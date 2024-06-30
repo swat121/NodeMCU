@@ -5,6 +5,8 @@
 #include "MemoryService.h"
 #include "ConnectionService.h"
 #include "ClientData.h"
+
+// ----------------------------
 #include <ESP8266mDNS.h>
 
 #include <uri/UriBraces.h>
@@ -39,6 +41,7 @@ boolean disconnectLedStatus = true;
 #define PIN_LED_Good 2    //D4
 #define PIN_LED_Error 14  //D5
 //------------------------------------------------------------------------
+
 #define PIN_Relay1 12  //D6
 boolean Relay1 = false;
 
@@ -135,7 +138,7 @@ void handleSTAConnection() {
 
     String boardData = createBoardDataJson();
     String clientData = createClientDataJson();
-    ConnectionService().connectToServer(mdnsName);
+    ConnectionService().runMDNS(mdnsName);
 
     ledBlink(3, 100);
   }
@@ -148,8 +151,13 @@ void handleAPConnection() {
 
 //-----------------------------------LOOP--------------------------------------------------------------
 void loop() {
-  MDNS.update();
   switchModeButton.tick();
+
+  if (WifiMode == WIFI_MODE_STA) {
+    connectionService.startConnectMqtt();
+    connectionService.mqttLoop();
+  }
+
   if (switchModeButton.isHolded()) {
     Serial.println("Button is holding");
 

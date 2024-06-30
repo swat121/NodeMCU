@@ -6,14 +6,20 @@
 #include "ESP8266WebServer.h"
 #include <ESP8266HTTPClient.h>
 #include <ESP8266mDNS.h>
+#include <PubSubClient.h>
 
 class ConnectionService {
 public:
   ConnectionService();
-  void connectToServer(const String& name);
+  void runMDNS(const String& name);
+  void publishMessage(const String& topic, const String& message);
+  void startConnectMqtt();
+  void mqttLoop();
 
 private:
   void setUpSetting();
+  static void mqttCallback(char* topic, byte* payload, unsigned int length);
+  void reconnectMqtt();
 };
 
 #endif

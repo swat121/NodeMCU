@@ -158,7 +158,7 @@ void sendMessage(String key, String value, int statusCode) {
   server.send(statusCode, "application/json", s);
 }
 
-void sendMessage(StaticJsonDocument<768> doc, int statusCode) {
+void sendMessage(StaticJsonDocument<192> doc, int statusCode) {
   String s;
   doc["name"] = data.name;
   serializeJson(doc, s);
